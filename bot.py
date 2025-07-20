@@ -129,7 +129,7 @@ class BCBot:
         logger.info(f"on_ChatRoomSyncMemberLeave data: {data}")
 
         self.others.pop(data["SourceMemberNumber"], None)
-        logger.info(f"Player left: {data["SourceMemberNumber"]}")
+        logger.info(f'Player left: {data["SourceMemberNumber"]}')
 
     async def on_ChatRoomSearchResult(self, data):
         logger.info(f"on_ChatRoomSearchResult data received.")
@@ -214,7 +214,7 @@ class BCBot:
     async def create_chatroom(self, chatroom_settings: dict):
         data = chatroom_settings
         data["Admin"].append(self.player["MemberNumber"])
-        logger.info(f"Creating chatroom {data["Name"]}.")
+        logger.info(f'Creating chatroom {data["Name"]}.')
         logger.debug(f"Chatroom data: {data}")
         await self.event_queue.put_event("ChatRoomCreate", data)
     
