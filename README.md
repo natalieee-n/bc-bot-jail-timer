@@ -6,13 +6,25 @@ This project is based on [BC-BotNyan](https://github.com/miyu-notM/BC-BotNyan), 
 
 ## Installation
 
-```bash
-pip install -r requirements.txt
+1. Edit configs
 
-# Edit configs
+```bash
 vim .env # based on .env.example
 vim chatroom_config.json
+```
 
+Choose either of the following ways to install.
+
+2.a Instaling using Docker
+
+```bash
+docker compose up --build
+```
+
+2.b Installing directly
+
+```bash
+pip install -r requirements.txt
 python main.py
 ```
 
