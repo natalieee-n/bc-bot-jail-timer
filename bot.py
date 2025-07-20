@@ -74,6 +74,8 @@ class BCBot:
 
     async def on_disconnect(self):
         logger.info("Socket disconnected")
+        self.is_logged_in = False
+        self.current_chatroom = None
 
     async def on_LoginResponse(self, data):
         logger.info("on_LoginResponse received.")
