@@ -1,0 +1,5 @@
+asyncio
+socketio
+python-socketio[asyncio_client]
+LZString
+python-dotenv

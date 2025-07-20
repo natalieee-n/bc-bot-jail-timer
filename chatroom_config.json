@@ -1,0 +1,17 @@
+{
+    "Name": "nnnnntest",
+    "Language": "CN",
+    "Description": "NNNNN bot test",
+    "Background": "Introduction",
+    "Private": true,
+    "Locked": false,
+    "Space": "",
+    "Game": "",
+    "Admin": [148776],
+    "Ban": [],
+    "Limit": 20,
+    "BlockCategory": ["Leashing"],
+    "MapData": {
+        "Type": "Never"
+    }
+}
