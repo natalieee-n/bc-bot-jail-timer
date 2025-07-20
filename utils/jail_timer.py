@@ -1,5 +1,4 @@
 import asyncio
-from datetime import timedelta
 from utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -48,4 +47,12 @@ class JailTimer:
 
     async def get_remaining_time(self):
         async with self._lock:
-            return str(timedelta(seconds=self.remaining_seconds))
+            seconds = self.remaining_seconds
+            days = seconds // (24 * 3600)
+            seconds %= 24 * 3600
+            hours = seconds // 3600
+            seconds %= 3600
+            minutes = seconds // 60
+            seconds %= 60
+
+            return f"{days} days, {hours:02}:{minutes:02}:{seconds:02}"
