@@ -1,8 +1,9 @@
 import asyncio
 import socketio
-import logging
 
-logger = logging.getLogger(__name__)
+from utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 class SocketEventQueue:
     def __init__(self, sio: socketio.AsyncClient):
