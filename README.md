@@ -28,6 +28,11 @@ pip install -r requirements.txt
 python main.py
 ```
 
+## Useful Links
+
+- Server socketio event definition: [Ben987/Bondage-Club-Server](https://github.com/Ben987/Bondage-Club-Server)
+- Client socketio event definition: [BondageProjects/Bondage-College](https://gitgud.io/BondageProjects/Bondage-College/-/blob/master/BondageClub/Scripts/Server.js)
+
 ## License
 
 The original project is licensed under the MIT license.  
