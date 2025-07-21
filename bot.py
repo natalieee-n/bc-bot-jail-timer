@@ -31,6 +31,7 @@ class BCBot:
                 appearance_code
             )
         ) if appearance_code else None
+        self.is_connected = False
         self.is_logged_in = False
         self.username = username
         self.password = password
@@ -43,26 +44,110 @@ class BCBot:
     def _register_handlers(self):
         self.sio.on("connect", self.on_connect)
         self.sio.on("disconnect", self.on_disconnect)
+        self.sio.on("ServerInfo", self.on_ServerInfo)
+        self.sio.on("CreationResponse", self.on_CreationResponse)
         self.sio.on("LoginResponse", self.on_LoginResponse)
-        self.sio.on("ChatRoomSearchResponse", self.on_ChatRoomSearchResponse)
-        self.sio.on("ChatRoomSearchResult", self.on_ChatRoomSearchResult)
-        self.sio.on("AccountQueryResult", self.on_AccountQueryResult)
-        self.sio.on("ChatRoomMessage", self.on_ChatRoomMessage)
-        self.sio.on("ChatRoomSync", self.on_ChatRoomSync)
-        self.sio.on("ChatRoomSyncItem", self.on_ChatRoomSyncItem)
-        self.sio.on("ChatRoomSyncMemberLeave", self.on_ChatRoomSyncMemberLeave)
-        self.sio.on("ChatRoomSyncCharacter", self.on_ChatRoomSyncCharacter)
-        self.sio.on("ChatRoomSyncSingle", self.on_ChatRoomSyncSingle)
         self.sio.on("LoginQueue", self.on_LoginQueue)
+        self.sio.on("ForceDisconnect", self.on_ForceDisconnect)
+        self.sio.on("ChatRoomSearchResult", self.on_ChatRoomSearchResult)
+        self.sio.on("ChatRoomSearchResponse", self.on_ChatRoomSearchResponse)
+        self.sio.on("ChatRoomCreateResponse", self.on_ChatRoomCreateResponse)
+        self.sio.on("ChatRoomUpdateResponse", self.on_ChatRoomUpdateResponse)
+        self.sio.on("ChatRoomSync", self.on_ChatRoomSync)
+        self.sio.on("ChatRoomSyncMemberJoin", self.on_ChatRoomSyncMemberJoin)
+        self.sio.on("ChatRoomSyncMemberLeave", self.on_ChatRoomSyncMemberLeave)
+        self.sio.on("ChatRoomSyncRoomProperties", self.on_ChatRoomSyncRoomProperties)
+        self.sio.on("ChatRoomSyncCharacter", self.on_ChatRoomSyncCharacter)
+        self.sio.on("ChatRoomSyncReorderPlayers", self.on_ChatRoomSyncReorderPlayers)
+        self.sio.on("ChatRoomSyncSingle", self.on_ChatRoomSyncSingle)
+        self.sio.on("ChatRoomSyncExpression", self.on_ChatRoomSyncExpression)
+        self.sio.on("ChatRoomSyncMapData", self.on_ChatRoomSyncMapData)
+        self.sio.on("ChatRoomSyncPose", self.on_ChatRoomSyncPose)
+        self.sio.on("ChatRoomSyncArousal", self.on_ChatRoomSyncArousal)
+        self.sio.on("ChatRoomSyncItem", self.on_ChatRoomSyncItem)
+        self.sio.on("ChatRoomMessage", self.on_ChatRoomMessage)
+        self.sio.on("ChatRoomAllowItem", self.on_ChatRoomAllowItem)
+        self.sio.on("ChatRoomGameResponse", self.on_ChatRoomGameResponse)
+        self.sio.on("PasswordResetResponse", self.on_PasswordResetResponse)
+        self.sio.on("AccountQueryResult", self.on_AccountQueryResult)
+        self.sio.on("AccountBeep", self.on_AccountBeep)
+        self.sio.on("AccountOwnership", self.on_AccountOwnership)
+        self.sio.on("AccountLovership", self.on_AccountLovership)
+        
+        
+        
+    async def on_ServerInfo(self, data):
+        logger.info("on_ServerInfo received.")
+        logger.info(f"on_ServerInfo data: {data}")
+
+    async def on_CreationResponse(self, data):
+        logger.info("on_CreationResponse received.")
+
+    async def on_ForceDisconnect(self, data):
+        logger.info("on_ForceDisconnect received.")
+
+    async def on_ChatRoomCreateResponse(self, data):
+        logger.info("on_ChatRoomCreateResponse received.")
+
+    async def on_ChatRoomUpdateResponse(self, data):
+        logger.info("on_ChatRoomUpdateResponse received.")
+
+    async def on_ChatRoomSyncMemberJoin(self, data):
+        logger.info("on_ChatRoomSyncMemberJoin received.")
+
+    async def on_ChatRoomSyncRoomProperties(self, data):
+        logger.info("on_ChatRoomSyncRoomProperties received.")
+
+    async def on_ChatRoomSyncReorderPlayers(self, data):
+        logger.info("on_ChatRoomSyncReorderPlayers received.")
+
+    async def on_ChatRoomSyncExpression(self, data):
+        logger.info("on_ChatRoomSyncExpression received.")
+
+    async def on_ChatRoomSyncMapData(self, data):
+        logger.info("on_ChatRoomSyncMapData received.")
+
+    async def on_ChatRoomSyncPose(self, data):
+        logger.info("on_ChatRoomSyncPose received.")
+
+    async def on_ChatRoomSyncArousal(self, data):
+        logger.info("on_ChatRoomSyncArousal received.")
+
+    async def on_ChatRoomAllowItem(self, data):
+        logger.info("on_ChatRoomAllowItem received.")
+
+    async def on_ChatRoomGameResponse(self, data):
+        logger.info("on_ChatRoomGameResponse received.")
+
+    async def on_PasswordResetResponse(self, data):
+        logger.info("on_PasswordResetResponse received.")
+
+    async def on_AccountBeep(self, data):
+        logger.info("on_AccountBeep received.")
+
+    async def on_AccountOwnership(self, data):
+        logger.info("on_AccountOwnership received.")
+
+    async def on_AccountLovership(self, data):
+        logger.info("on_AccountLovership received.")
     
-    async def connect(self, url, **kwargs):
+    async def connect(self):
         try:
             logger.info("Connecting to server...")
-            await self.sio.connect(url, **kwargs)
-            logger.info("Successfully connected to server")
+            await self.sio.connect(
+                "https://bondage-club-server.herokuapp.com/",
+                headers={
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; rv:102.0) Gecko/20100101 Firefox/102.0",
+                    "Origin": "https://www.bondage-europe.com",
+                },
+            )
             return True
         except Exception as e:
-            logger.error(e)
+            if "Already connected" in str(e):
+                logger.info("Already connected to server")
+                self.is_connected = True
+            else:
+                logger.error(e, exc_info=True)
             return False
 
     async def disconnect(self):
@@ -71,9 +156,11 @@ class BCBot:
 
     async def on_connect(self):
         logger.info("Socket connected")
+        self.is_connected = True
 
     async def on_disconnect(self):
         logger.info("Socket disconnected")
+        self.is_connected = False
         self.is_logged_in = False
         self.current_chatroom = None
 
@@ -82,7 +169,7 @@ class BCBot:
         logger.debug(f"on_LoginResponsedata: {data}")
 
         self.player = data
-        self.is_logged_in = True
+        # self.is_logged_in = True
     
     async def on_ChatRoomSearchResponse(self, data):
         logger.info(f"on_ChatRoomSearchResponse data: {data}")
@@ -151,15 +238,15 @@ class BCBot:
             logger.info(f"Update {i['Name']}({i['MemberNumber']})'s data")
             self.others[i["MemberNumber"]] = i
 
-            # update ownership
-            owner = i.get("Ownership", {})
-            owner = owner.get("MemberNumber", 0) if owner else 0
-            if (
-                owner != 0
-                and owner == self.player["MemberNumber"]
-                and i["MemberNumber"] not in self.player["SubmissivesList"]
-            ):
-                await self.add_or_remove_submissive(i["MemberNumber"])
+            # # update ownership
+            # owner = i.get("Ownership", {})
+            # owner = owner.get("MemberNumber", 0) if owner else 0
+            # if (
+            #     owner != 0
+            #     and owner == self.player["MemberNumber"]
+            #     and i["MemberNumber"] not in self.player["SubmissivesList"]
+            # ):
+            #     await self.add_or_remove_submissive(i["MemberNumber"])
             # # add gameversion check
             # gameversion = i.get("OnlineSharedSettings", {}).get("GameVersion")
             # if gameversion:
@@ -191,7 +278,7 @@ class BCBot:
 
     async def login(self):
         logger.info(f"Logging in using AccountName {self.username}.")
-        await self.event_queue.put_event(
+        await self.sio.emit(
             "AccountLogin", 
             {
                 "AccountName": self.username, 
@@ -250,17 +337,10 @@ class BCBot:
             logger.info("Starting event queue...")
             await self.event_queue.start()
 
-            
-            await self.connect(
-                "https://bondage-club-server.herokuapp.com/",
-                headers={
-                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; rv:102.0) Gecko/20100101 Firefox/102.0",
-                    "Origin": "https://www.bondage-europe.com",
-                },
-            )
-            await self.login()
             while True:
-                if not self.is_logged_in:
+                if not self.is_connected:
+                    await self.connect()
+                elif not self.is_logged_in:
                     await self.login()
                 elif not self.current_chatroom:
                     await self.search_chatroom(self.chatroom_settings["Name"])
@@ -277,9 +357,7 @@ class BCBot:
                         "Idling..."
                     )
                     await self.sio.wait()
-                await asyncio.sleep(3)
-                
-
+                await asyncio.sleep(5)
 
         except (KeyboardInterrupt, asyncio.CancelledError):
             logger.info("Shutting down with Ctrl+C...")
